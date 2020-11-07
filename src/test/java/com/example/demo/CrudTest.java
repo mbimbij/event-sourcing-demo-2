@@ -151,30 +151,6 @@ class CrudTest {
   }
 
   @Test
-  void getAggregateAtSpecificTime() {
-    UUID contactId = UUID.randomUUID();
-    eventStream.publish(new ContactCreatedEvent(contactId, now(), emailAddress));
-    eventStream.publish(new ContactChangedPhoneNumberEvent(contactId, now().plusHours(1), new Contact.PhoneNumber("newPhoneNumber")));
-
-    Contact latestVersion = contactRepository.get(contactId).orElseThrow();
-    Contact previousVersion = contactRepository.getAtTime(contactId, now().plusMinutes(1)).orElseThrow();
-
-    Contact expectedLatestVersion = new Contact(CREATED, null, emailAddress, null, new Contact.PhoneNumber("newPhoneNumber"), null);
-    Contact expectedPreviousVersion = new Contact(CREATED, null, emailAddress, null, null, null);
-
-    SoftAssertions.assertSoftly(softAssertions -> {
-      softAssertions.assertThat(latestVersion)
-          .usingRecursiveComparison()
-          .ignoringFields("eventStream", "id")
-          .isEqualTo(expectedLatestVersion);
-      softAssertions.assertThat(previousVersion)
-          .usingRecursiveComparison()
-          .ignoringFields("eventStream", "id")
-          .isEqualTo(expectedPreviousVersion);
-    });
-  }
-
-  @Test
   void getProjectionAtSpecificTime() {
     UUID contactId = UUID.randomUUID();
     eventStream.publish(new ContactCreatedEvent(contactId, now(), emailAddress));
