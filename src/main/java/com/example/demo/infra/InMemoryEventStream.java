@@ -7,6 +7,7 @@ import com.example.demo.Observer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class InMemoryEventStream implements EventStream {
   private List<INotifyDomainEvent> events = new ArrayList<>();
@@ -18,9 +19,11 @@ public class InMemoryEventStream implements EventStream {
   }
 
   @Override
-  public void publish(ContactCreatedEvent contactCreatedEvent) {
-    events.add(contactCreatedEvent);
-    observers.forEach(observer -> observer.doNotify(contactCreatedEvent));
+  public void publish(INotifyDomainEvent event) {
+    events.add(event);
+    observers.stream()
+        .filter(observer -> Objects.equals(observer.getObservedAggregate(), event.getAggregateId()))
+        .forEach(observer -> observer.doNotify(event));
   }
 
   @Override
