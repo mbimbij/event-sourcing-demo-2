@@ -1,29 +1,42 @@
 package com.example.demo;
 
+import com.example.demo.infra.ContactDeletedEvent;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.time.ZonedDateTime;
 import java.util.UUID;
+import java.util.stream.StreamSupport;
+
+import static com.example.demo.Contact.State.CREATED;
+import static com.example.demo.Contact.State.DELETED;
 
 @Getter
 @AllArgsConstructor
 public class ContactProjection implements Observer {
-  private UUID contactUuid;
-  private boolean created;
+  private UUID contactId;
+  private Contact.State state;
   private Contact.Username username;
   private Contact.EmailAddress emailAddress;
   private Contact.Address address;
   private Contact.PhoneNumber phoneNumber;
 
-  public ContactProjection(UUID contactUuid, EventStream eventStream) {
-    this.contactUuid = contactUuid;
+  public ContactProjection(UUID contactId, EventStream eventStream) {
+    this.contactId = contactId;
     eventStream.subscribe(this);
     eventStream.getEvents().forEach(this::apply);
   }
 
+  public ContactProjection(UUID contactId, EventStream eventStream, ZonedDateTime atTime) {
+    this.contactId = contactId;
+    StreamSupport.stream(eventStream.getEvents().spliterator(),false)
+        .filter(domainEvent -> domainEvent.getEventTime().isBefore(atTime))
+        .forEach(this::apply);
+  }
+
   @Override
   public UUID getObservedAggregate() {
-    return contactUuid;
+    return contactId;
   }
 
   @Override
@@ -33,7 +46,7 @@ public class ContactProjection implements Observer {
 
   private void apply(INotifyDomainEvent event) {
     if (event instanceof ContactCreatedEvent) {
-      created = true;
+      state = CREATED;
       username = ((ContactCreatedEvent) event).getUsername();
       emailAddress = ((ContactCreatedEvent) event).getEmailAddress();
       address = ((ContactCreatedEvent) event).getAddress();
@@ -44,8 +57,10 @@ public class ContactProjection implements Observer {
       username = ((ContactChangedUsernameEvent) event).getNewUsername();
     } else if (event instanceof ContactChangedAddressEvent) {
       address = ((ContactChangedAddressEvent) event).getNewAddress();
-    } else if (event instanceof ContactChangedPhoneNumber) {
-      phoneNumber = ((ContactChangedPhoneNumber) event).getNewPhoneNumber();
+    } else if (event instanceof ContactChangedPhoneNumberEvent) {
+      phoneNumber = ((ContactChangedPhoneNumberEvent) event).getNewPhoneNumber();
+    } else if (event instanceof ContactDeletedEvent) {
+      state = DELETED;
     }
   }
 
