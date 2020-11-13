@@ -39,17 +39,4 @@ public class InMemoryContactRepository implements ContactRepository {
       return Optional.of(contact);
     }
   }
-
-  @Override
-  public Optional<Contact> getAtTime(UUID id, ZonedDateTime atTime) {
-    List<INotifyDomainEvent> events = StreamSupport.stream(eventStream.getEvents().spliterator(), false)
-        .filter(domainEvent -> domainEvent.getEventTime().isBefore(atTime))
-        .filter(domainEvent -> Objects.equals(domainEvent.getAggregateId(), id)).collect(Collectors.toList());
-    Contact contact = new Contact(events);
-    if(!Objects.equals(contact.getState(), CREATED)) {
-      return Optional.empty();
-    }else{
-      return Optional.of(contact);
-    }
-  }
 }
