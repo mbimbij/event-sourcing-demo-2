@@ -1,11 +1,7 @@
-package com.example.demo.infra;
+package com.example.demo.infra.inmemory;
 
-import com.example.demo.Contact;
-import com.example.demo.ContactRepository;
-import com.example.demo.EventStream;
-import com.example.demo.INotifyDomainEvent;
+import com.example.demo.*;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -14,7 +10,6 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static com.example.demo.Contact.State.CREATED;
-import static com.example.demo.Contact.State.DELETED;
 
 public class InMemoryContactRepository implements ContactRepository {
   EventStream eventStream;
@@ -30,8 +25,8 @@ public class InMemoryContactRepository implements ContactRepository {
 
   @Override
   public Optional<Contact> get(UUID id) {
-    List<INotifyDomainEvent> events = StreamSupport.stream(eventStream.getEvents().spliterator(), false)
-        .filter(domainEvent -> Objects.equals(domainEvent.getAggregateId(), id)).collect(Collectors.toList());
+    List<INotifyDomainEvent> events = StreamSupport.stream(eventStream.getEvents(id).spliterator(), false)
+        .collect(Collectors.toList());
     Contact contact = new Contact(events);
     if(!Objects.equals(contact.getState(), CREATED)) {
       return Optional.empty();

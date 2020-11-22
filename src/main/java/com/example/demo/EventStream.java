@@ -1,7 +1,10 @@
 package com.example.demo;
 
+import java.util.UUID;
+
 public interface EventStream {
-  Iterable<INotifyDomainEvent> getEvents();
+
+  Iterable<INotifyDomainEvent> getEvents(UUID uuid);
 
   void publish(INotifyDomainEvent domainEvent);
 

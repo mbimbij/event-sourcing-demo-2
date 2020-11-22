@@ -1,6 +1,5 @@
 package com.example.demo;
 
-import com.example.demo.infra.ContactDeletedEvent;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -24,12 +23,12 @@ public class ContactProjection implements Observer {
   public ContactProjection(UUID contactId, EventStream eventStream) {
     this.contactId = contactId;
     eventStream.subscribe(this);
-    eventStream.getEvents().forEach(this::apply);
+    eventStream.getEvents(contactId).forEach(this::apply);
   }
 
   public ContactProjection(UUID contactId, EventStream eventStream, ZonedDateTime atTime) {
     this.contactId = contactId;
-    StreamSupport.stream(eventStream.getEvents().spliterator(),false)
+    StreamSupport.stream(eventStream.getEvents(contactId).spliterator(),false)
         .filter(domainEvent -> domainEvent.getEventTime().isBefore(atTime))
         .forEach(this::apply);
   }

@@ -1,7 +1,5 @@
 package com.example.demo;
 
-import com.example.demo.infra.ContactDeletedEvent;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.util.List;

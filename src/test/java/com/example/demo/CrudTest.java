@@ -1,12 +1,11 @@
 package com.example.demo;
 
-import com.example.demo.infra.InMemoryContactRepository;
-import com.example.demo.infra.InMemoryEventStream;
+import com.example.demo.infra.inmemory.InMemoryContactRepository;
+import com.example.demo.infra.inmemory.InMemoryEventStream;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.ZonedDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -14,12 +13,11 @@ import static com.example.demo.Contact.State.CREATED;
 import static com.example.demo.Contact.State.DELETED;
 import static java.time.ZonedDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 
 class CrudTest {
 
   private final Contact.EmailAddress emailAddress = new Contact.EmailAddress("toto@yopmail.com");
-  private EventStream eventStream;
+  private InMemoryEventStream eventStream;
   private ContactFactory contactFactory;
   private ContactRepository contactRepository;
 

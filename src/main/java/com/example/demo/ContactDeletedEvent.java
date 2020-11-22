@@ -1,4 +1,4 @@
-package com.example.demo.infra;
+package com.example.demo;
 
 import com.example.demo.INotifyDomainEvent;
 
