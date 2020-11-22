@@ -4,18 +4,14 @@ import com.example.demo.Contact;
 import com.example.demo.ContactCreatedEvent;
 import com.example.demo.EventSourcingDemo2Application;
 import com.example.demo.TestUtils;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.testcontainers.containers.CassandraContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -43,21 +39,25 @@ class CassandraEventStreamTest {
 
   @Test
   void whenPublishEvent_thenEventIsPresentInCassandra() {
-    UUID contactUuid = UUID.randomUUID();
+    // GIVEN
+    UUID contactId = UUID.randomUUID();
     ZonedDateTime eventTime = ZonedDateTime.now();
-    ContactCreatedEvent contactCreatedEvent = new ContactCreatedEvent(contactUuid,
+    ContactCreatedEvent contactCreatedEvent = new ContactCreatedEvent(contactId,
         eventTime,
         new Contact.EmailAddress("joseph@yopmail.com"));
+
+    // WHEN
     cassandraEventStream.publish(contactCreatedEvent);
-    List<CassandraContactEvent> allEvents = eventRepository.findAll();
+
+    // THEN
+    List<CassandraContactEvent> allEvents = eventRepository.findAllByContactId(contactId);
     assertThat(allEvents).isNotEmpty();
     CassandraContactEvent actualEvent = allEvents.get(0);
-    CassandraContactEvent expectedEvent = new CassandraContactEvent(new CassandraContactEventKey(contactUuid, eventTime.toLocalDateTime()), EventType.CONTACT_CREATED, null, "joseph@yopmail.com", null, null);
+    CassandraContactEvent expectedEvent = new CassandraContactEvent(contactId, eventTime.toLocalDateTime(), EventType.CONTACT_CREATED, null, "joseph@yopmail.com", null, null);
     assertThat(actualEvent)
         .usingRecursiveComparison()
         .withComparatorForType(TestUtils.LOCAL_DATE_TIME_COMPARATOR, LocalDateTime.class)
         .isEqualTo(expectedEvent);
-    System.out.println();
   }
 
   static class Initializer

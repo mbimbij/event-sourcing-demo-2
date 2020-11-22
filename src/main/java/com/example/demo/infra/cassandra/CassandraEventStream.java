@@ -22,9 +22,9 @@ public class CassandraEventStream implements EventStream {
   @Override
   public void publish(INotifyDomainEvent domainEvent) {
     if (domainEvent instanceof ContactCreatedEvent) {
-      CassandraContactEventKey key = new CassandraContactEventKey(domainEvent.getAggregateId(),
-          domainEvent.getEventTime().toLocalDateTime());
-      CassandraContactEvent event = new CassandraContactEvent(key,
+      UUID aggregateId = domainEvent.getAggregateId();
+      CassandraContactEvent event = new CassandraContactEvent(aggregateId,
+          domainEvent.getEventTime().toLocalDateTime(),
           EventType.CONTACT_CREATED,
           null,
           ((ContactCreatedEvent) domainEvent).getEmailAddress().getValue(),

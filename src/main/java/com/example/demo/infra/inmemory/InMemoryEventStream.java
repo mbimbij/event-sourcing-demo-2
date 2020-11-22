@@ -1,6 +1,5 @@
 package com.example.demo.infra.inmemory;
 
-import com.example.demo.ContactCreatedEvent;
 import com.example.demo.EventStream;
 import com.example.demo.INotifyDomainEvent;
 import com.example.demo.Observer;

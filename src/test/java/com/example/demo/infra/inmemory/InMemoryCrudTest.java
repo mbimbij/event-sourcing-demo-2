@@ -1,8 +1,6 @@
 package com.example.demo.infra.inmemory;
 
 import com.example.demo.*;
-import com.example.demo.infra.inmemory.InMemoryContactRepository;
-import com.example.demo.infra.inmemory.InMemoryEventStream;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
