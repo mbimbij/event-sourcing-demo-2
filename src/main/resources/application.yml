@@ -16,4 +16,4 @@ spring:
         - localhost:9042
 #      username: cassandra
 #      password: cassandra
-      schema-action: "CREATE"
+      schema-action: "CREATE_IF_NOT_EXISTS"

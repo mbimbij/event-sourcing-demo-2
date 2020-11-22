@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static org.springframework.data.cassandra.core.cql.Ordering.ASCENDING;
+import static org.springframework.data.cassandra.core.cql.PrimaryKeyType.CLUSTERED;
 import static org.springframework.data.cassandra.core.cql.PrimaryKeyType.PARTITIONED;
 
 @Table("contact_events")
@@ -16,7 +17,7 @@ import static org.springframework.data.cassandra.core.cql.PrimaryKeyType.PARTITI
 public class CassandraContactEvent {
   @PrimaryKeyColumn(name = "contact_id", type = PARTITIONED)
   private UUID contactId;
-  @PrimaryKeyColumn(name = "event_date_time", ordinal = 1, ordering = ASCENDING)
+  @PrimaryKeyColumn(name = "event_date_time", ordinal = 1, type = CLUSTERED, ordering = ASCENDING)
   private LocalDateTime eventDateTime;
   @Column("event_type")
   private EventType eventType;
