@@ -9,3 +9,11 @@ spring:
         - localhost:9094
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  data:
+    cassandra:
+      keyspace-name: contacts
+      contact-points:
+        - localhost:9042
+#      username: cassandra
+#      password: cassandra
+      schema-action: "CREATE"

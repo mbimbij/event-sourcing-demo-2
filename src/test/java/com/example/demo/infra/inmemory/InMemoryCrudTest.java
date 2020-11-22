@@ -1,5 +1,6 @@
-package com.example.demo;
+package com.example.demo.infra.inmemory;
 
+import com.example.demo.*;
 import com.example.demo.infra.inmemory.InMemoryContactRepository;
 import com.example.demo.infra.inmemory.InMemoryEventStream;
 import org.assertj.core.api.SoftAssertions;
@@ -14,7 +15,7 @@ import static com.example.demo.Contact.State.DELETED;
 import static java.time.ZonedDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class CrudTest {
+class InMemoryCrudTest {
 
   private final Contact.EmailAddress emailAddress = new Contact.EmailAddress("toto@yopmail.com");
   private InMemoryEventStream eventStream;
