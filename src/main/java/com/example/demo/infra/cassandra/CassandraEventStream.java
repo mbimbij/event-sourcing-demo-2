@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -14,6 +16,7 @@ import java.util.stream.Collectors;
 public class CassandraEventStream implements EventStream {
   @Autowired
   private CassandraEventRepository eventRepository;
+  private List<Observer> observers = new ArrayList<>();
 
   @Override
   public Iterable<INotifyDomainEvent> getEvents(UUID contactId) {
@@ -100,10 +103,16 @@ public class CassandraEventStream implements EventStream {
           null);
       eventRepository.save(event);
     }
+    observers.forEach(observer -> observer.doNotify(domainEvent));
   }
 
   @Override
   public void subscribe(Observer observer) {
+    observers.add(observer);
+  }
 
+  @Override
+  public void unsubscribe(Observer observer) {
+    observers.remove(observer);
   }
 }

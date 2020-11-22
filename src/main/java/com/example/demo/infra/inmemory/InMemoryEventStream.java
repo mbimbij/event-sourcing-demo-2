@@ -35,4 +35,9 @@ public class InMemoryEventStream implements EventStream {
   public void subscribe(Observer observer) {
     observers.add(observer);
   }
+
+  @Override
+  public void unsubscribe(Observer observer) {
+    observers.remove(observer);
+  }
 }
