@@ -1,7 +1,11 @@
 app:
   contact-events-topic: contact-events
+  eventstore.implementation: inmemory
+
 
 spring:
+  main:
+    allow-bean-definition-overriding: true
   kafka:
     producer:
       client-id: wordcount-application

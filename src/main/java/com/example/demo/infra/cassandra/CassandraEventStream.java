@@ -1,6 +1,7 @@
 package com.example.demo.infra.cassandra;
 
 import com.example.demo.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,10 +13,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Component
+@RequiredArgsConstructor
 public class CassandraEventStream implements EventStream {
-  @Autowired
-  private CassandraEventRepository eventRepository;
+  private final CassandraEventRepository eventRepository;
   private List<Observer> observers = new ArrayList<>();
 
   @Override
