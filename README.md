@@ -18,3 +18,9 @@ kafkacat (be mindful of the network the kafka container is connected to)
 ```
 docker run --network=word-count-kafka-streams-cqrs_default edenhill/kafkacat:1.6.0   kafkacat -b PLAINTEXT://kafka:9092 -t contact-events -C  -f '\nKey (%K bytes): %k Partition: %p\n'
 ```
+
+Delete all running containers
+
+```
+docker ps | awk {' print $1 '} | tail -n+2 > tmp.txt; for line in $(cat tmp.txt); do docker kill $line; done; rm tmp.txt
+```
