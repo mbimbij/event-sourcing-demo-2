@@ -1,9 +1,7 @@
 package com.example.demo.infra.cassandra;
 
-import com.example.demo.*;
+import com.example.demo.core.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.time.ZoneId;
 import java.time.ZoneOffset;

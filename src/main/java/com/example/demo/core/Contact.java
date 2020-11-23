@@ -1,11 +1,11 @@
-package com.example.demo;
+package com.example.demo.core;
 
 import lombok.Getter;
 
 import java.util.List;
 import java.util.UUID;
 
-import static com.example.demo.Contact.State.*;
+import static com.example.demo.core.Contact.State.*;
 
 @Getter
 public class Contact {

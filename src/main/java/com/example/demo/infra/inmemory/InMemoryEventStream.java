@@ -1,8 +1,8 @@
 package com.example.demo.infra.inmemory;
 
-import com.example.demo.EventStream;
-import com.example.demo.INotifyDomainEvent;
-import com.example.demo.Observer;
+import com.example.demo.core.EventStream;
+import com.example.demo.core.INotifyDomainEvent;
+import com.example.demo.core.Observer;
 
 import java.util.ArrayList;
 import java.util.List;

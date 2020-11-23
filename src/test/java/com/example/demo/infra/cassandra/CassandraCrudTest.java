@@ -1,9 +1,13 @@
-package com.example.demo.infra.inmemory;
+package com.example.demo.infra.cassandra;
 
+import com.example.demo.*;
 import com.example.demo.core.*;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -13,29 +17,34 @@ import static com.example.demo.core.Contact.State.DELETED;
 import static java.time.ZonedDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class InMemoryCrudTest {
+@SpringBootTest
+@ContextConfiguration(classes = {
+    EventSourcingDemo2Application.class,
+    TestContainersCassandraConfig.class
+},initializers = TestContainersCassandraConfig.Initializer.class)
+@TestPropertySource(properties = {
+    "spring.data.cassandra.localDatacenter=datacenter1",
+    "app.eventstore.implementation=cassandra"
+})
+class CassandraCrudTest {
 
   private final Contact.EmailAddress emailAddress = new Contact.EmailAddress("toto@yopmail.com");
-  private InMemoryEventStream eventStream;
+  @Autowired
+  private EventStream eventStream;
+  @Autowired
   private ContactFactory contactFactory;
+  @Autowired
   private ContactRepository contactRepository;
-
-  @BeforeEach
-  void setUp() {
-    eventStream = new InMemoryEventStream();
-    contactFactory = new ContactFactory(eventStream);
-    contactRepository = new ContactRepository(eventStream);
-  }
 
   @Test
   void shouldPublishContactCreatedEvent_whenFactoryCreatesContact() {
     Contact contact = contactFactory.createContact(emailAddress);
-    UUID contactUuid = contact.getId();
-    ContactProjection contactProjection = new ContactProjection(contactUuid, eventStream);
+    UUID contactId = contact.getId();
+    ContactProjection contactProjection = new ContactProjection(contactId, eventStream);
 
-    ContactCreatedEvent expectedContactCreatedEvent = new ContactCreatedEvent(contactUuid, emailAddress);
+    ContactCreatedEvent expectedContactCreatedEvent = new ContactCreatedEvent(contactId, emailAddress);
     SoftAssertions.assertSoftly(softAssertions -> {
-      assertThat(eventStream.getEvents()).containsExactly(expectedContactCreatedEvent);
+      assertThat(eventStream.getEvents(contactId)).containsExactly(expectedContactCreatedEvent);
       assertThat(contactProjection.getState()).isEqualTo(CREATED);
     });
   }

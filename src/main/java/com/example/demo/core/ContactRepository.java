@@ -1,6 +1,6 @@
-package com.example.demo.infra.inmemory;
+package com.example.demo.core;
 
-import com.example.demo.*;
+import com.example.demo.core.*;
 
 import java.util.List;
 import java.util.Objects;
@@ -9,21 +9,19 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static com.example.demo.Contact.State.CREATED;
+import static com.example.demo.core.Contact.State.CREATED;
 
-public class InMemoryContactRepository implements ContactRepository {
+public class ContactRepository {
   EventStream eventStream;
 
-  public InMemoryContactRepository(EventStream eventStream) {
+  public ContactRepository(EventStream eventStream) {
     this.eventStream = eventStream;
   }
 
-  @Override
   public void delete(UUID contactId) {
     eventStream.publish(new ContactDeletedEvent(contactId));
   }
 
-  @Override
   public Optional<Contact> get(UUID id) {
     List<INotifyDomainEvent> events = StreamSupport.stream(eventStream.getEvents(id).spliterator(), false)
         .collect(Collectors.toList());

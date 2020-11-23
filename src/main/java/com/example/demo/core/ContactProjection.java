@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.core;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,8 +7,8 @@ import java.time.ZonedDateTime;
 import java.util.UUID;
 import java.util.stream.StreamSupport;
 
-import static com.example.demo.Contact.State.CREATED;
-import static com.example.demo.Contact.State.DELETED;
+import static com.example.demo.core.Contact.State.CREATED;
+import static com.example.demo.core.Contact.State.DELETED;
 
 @Getter
 @AllArgsConstructor

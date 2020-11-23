@@ -1,11 +1,11 @@
 package com.example.demo.infra.cassandra;
 
-import com.example.demo.Contact.Address;
-import com.example.demo.Contact.EmailAddress;
-import com.example.demo.Contact.PhoneNumber;
-import com.example.demo.Contact.Username;
+import com.example.demo.core.*;
+import com.example.demo.core.Contact.Address;
+import com.example.demo.core.Contact.EmailAddress;
+import com.example.demo.core.Contact.PhoneNumber;
+import com.example.demo.core.Contact.Username;
 import com.example.demo.*;
-import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
