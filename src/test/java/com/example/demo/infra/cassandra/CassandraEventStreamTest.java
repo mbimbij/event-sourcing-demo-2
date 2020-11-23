@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
@@ -21,12 +22,16 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Testcontainers
 @SpringBootTest
 @ContextConfiguration(classes = {
     EventSourcingDemo2Application.class,
     TestContainersCassandraConfig.class
+},initializers = TestContainersCassandraConfig.Initializer.class)
+@TestPropertySource(properties = {
+    "spring.data.cassandra.localDatacenter=datacenter1",
+    "app.eventstore.implementation=cassandra"
 })
-@TestPropertySource(properties = {"spring.data.cassandra.localDatacenter=datacenter1"})
 class CassandraEventStreamTest {
 
   @Autowired
@@ -86,12 +91,13 @@ class CassandraEventStreamTest {
     ContactChangedPhoneNumberEvent contactChangedPhoneNumberEvent2 = new ContactChangedPhoneNumberEvent(contactId2, now.minusHours(5), new PhoneNumber(newContact2PhoneNumber));
     ContactChangedUsernameEvent contactChangedUsernameEvent2 = new ContactChangedUsernameEvent(contactId2, now.minusHours(4), new Username(newContact2Username));
 
-    cassandraEventStream.publish(contact1CreatedEvent);
+    cassandraEventStream.publish(contactChangedPhoneNumberEvent1);
     cassandraEventStream.publish(contactChangedUsernameEvent1);
     cassandraEventStream.publish(contactChangedEmailAddressEvent1);
-    cassandraEventStream.publish(contactChangedAddressEvent1);
-    cassandraEventStream.publish(contactChangedPhoneNumberEvent1);
     cassandraEventStream.publish(contactDeletedEvent1);
+    cassandraEventStream.publish(contact1CreatedEvent);
+    cassandraEventStream.publish(contactChangedAddressEvent1);
+
     cassandraEventStream.publish(contact2CreatedEvent);
     cassandraEventStream.publish(contactChangedEmailAddressEvent2);
     cassandraEventStream.publish(contactChangedAddressEvent2);

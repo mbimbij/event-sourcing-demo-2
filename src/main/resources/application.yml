@@ -1,6 +1,6 @@
 app:
   contact-events-topic: contact-events
-  eventstore.implementation: inmemory
+  eventstore.implementation: cassandra
 
 
 spring:
@@ -16,8 +16,6 @@ spring:
   data:
     cassandra:
       keyspace-name: contacts
-      contact-points:
-        - localhost:9042
 #      username: cassandra
 #      password: cassandra
       schema-action: "CREATE_IF_NOT_EXISTS"

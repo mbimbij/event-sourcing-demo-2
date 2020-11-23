@@ -4,30 +4,29 @@ import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.CassandraContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
-@Testcontainers
+import java.util.Arrays;
+
 @Configuration
-@Profile("!docker-manual")
-@ContextConfiguration(initializers = TestContainersCassandraConfig.Initializer.class)
 public class TestContainersCassandraConfig {
-  @Container
-  private static CassandraContainer cassandra = new CassandraContainer("cassandra:3");
+  public static final String ACTIVE_PROFILE = "testcontainers";
+  private static CassandraContainer cassandra;
   static class Initializer
       implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
     public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-      int cassandraPort = cassandra.getMappedPort(9042);
-      String cassandraBaseUrl = String.format("localhost:%d", cassandraPort);
-      TestPropertyValues.of(
-          String.format("spring.data.cassandra.contact-points[0]=%s", cassandraBaseUrl),
-          String.format("spring.data.cassandra.port=%d", cassandraPort)
-      ).applyTo(configurableApplicationContext.getEnvironment());
+      boolean testContainersProfileActivated = Arrays.asList(configurableApplicationContext.getEnvironment().getActiveProfiles()).contains(ACTIVE_PROFILE);
+      if(testContainersProfileActivated){
+        cassandra = new CassandraContainer("cassandra:3");
+        cassandra.start();
+        int cassandraPort = cassandra.getMappedPort(9042);
+        String cassandraBaseUrl = String.format("localhost:%d", cassandraPort);
+        TestPropertyValues.of(
+            String.format("spring.data.cassandra.contact-points[0]=%s", cassandraBaseUrl),
+            String.format("spring.data.cassandra.port=%d", cassandraPort)
+        ).applyTo(configurableApplicationContext.getEnvironment());
+      }
     }
   }
 }
