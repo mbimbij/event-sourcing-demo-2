@@ -1,4 +1,4 @@
-package com.example.demo.infra.cassandra;
+package com.example.demo.infra.toto;
 
 import com.example.demo.core.*;
 import com.example.demo.core.Contact.Address;
@@ -6,10 +6,15 @@ import com.example.demo.core.Contact.EmailAddress;
 import com.example.demo.core.Contact.PhoneNumber;
 import com.example.demo.core.Contact.Username;
 import com.example.demo.*;
+import com.example.demo.infra.cassandra.CassandraContactEvent;
+import com.example.demo.infra.cassandra.CassandraEventRepository;
+import com.example.demo.infra.cassandra.CassandraEventStream;
+import com.example.demo.infra.cassandra.EventType;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -20,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.example.demo.infra.toto.TestContainersCassandraConfig.ACTIVE_PROFILE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Testcontainers
@@ -27,12 +33,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ContextConfiguration(classes = {
     EventSourcingDemo2Application.class,
     TestContainersCassandraConfig.class
-},initializers = TestContainersCassandraConfig.Initializer.class)
-@TestPropertySource(properties = {
-    "spring.data.cassandra.localDatacenter=datacenter1",
-    "app.eventstore.implementation=cassandra"
-})
-class CassandraEventStreamTest {
+}, initializers = TestContainersCassandraConfig.Initializer.class)
+class CassandraEventStreamIT extends BaseIntegrationTest {
 
   @Autowired
   CassandraEventStream cassandraEventStream;

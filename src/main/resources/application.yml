@@ -2,8 +2,9 @@ app:
   contact-events-topic: contact-events
   eventstore.implementation: cassandra
 
-
 spring:
+  profiles:
+    include: '@spring.profiles.include@'
   main:
     allow-bean-definition-overriding: true
   kafka:

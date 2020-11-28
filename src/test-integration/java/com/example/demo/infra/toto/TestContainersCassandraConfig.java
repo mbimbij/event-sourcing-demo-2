@@ -1,5 +1,6 @@
-package com.example.demo.infra.cassandra;
+package com.example.demo.infra.toto;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -7,18 +8,22 @@ import org.springframework.context.annotation.Configuration;
 import org.testcontainers.containers.CassandraContainer;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
+@Slf4j
 public class TestContainersCassandraConfig {
   public static final String ACTIVE_PROFILE = "testcontainers";
-  private static CassandraContainer cassandra;
+
   static class Initializer
       implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
     public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-      boolean testContainersProfileActivated = Arrays.asList(configurableApplicationContext.getEnvironment().getActiveProfiles()).contains(ACTIVE_PROFILE);
-      if(testContainersProfileActivated){
-        cassandra = new CassandraContainer("cassandra:3");
+      List<String> activeProfiles = Arrays.asList(configurableApplicationContext.getEnvironment().getActiveProfiles());
+      log.info("coucou {}", activeProfiles.toString());
+      boolean testContainersProfileActivated = activeProfiles.contains(ACTIVE_PROFILE);
+      if (testContainersProfileActivated) {
+        CassandraContainer cassandra = new CassandraContainer("cassandra:3");
         cassandra.start();
         int cassandraPort = cassandra.getMappedPort(9042);
         String cassandraBaseUrl = String.format("localhost:%d", cassandraPort);

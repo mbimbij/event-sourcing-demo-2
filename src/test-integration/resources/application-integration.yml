@@ -1,0 +1,8 @@
+app:
+  eventstore:
+    implementation: cassandra
+
+spring:
+  data:
+    cassandra:
+      localDatacenter: datacenter1
