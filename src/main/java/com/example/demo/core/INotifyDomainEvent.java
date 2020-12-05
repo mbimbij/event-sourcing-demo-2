@@ -9,12 +9,12 @@ public abstract class INotifyDomainEvent {
   protected UUID aggregateId;
   protected ZonedDateTime eventTime;
 
-  public INotifyDomainEvent(UUID aggregateId) {
+  protected INotifyDomainEvent(UUID aggregateId) {
     this.aggregateId = aggregateId;
     this.eventTime = now();
   }
 
-  public INotifyDomainEvent(UUID aggregateId, ZonedDateTime eventTime) {
+  protected INotifyDomainEvent(UUID aggregateId, ZonedDateTime eventTime) {
     this.aggregateId = aggregateId;
     this.eventTime = eventTime;
   }

@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
     EventSourcingDemo2Application.class,
     TestContainersCassandraConfig.class
 }, initializers = TestContainersCassandraConfig.Initializer.class)
-class CassandraEventStreamIT extends BaseIntegrationTest {
+class CassandraEventStreamIT extends IntegrationProfileActivation {
 
   @Autowired
   CassandraEventStream cassandraEventStream;

@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
     EventSourcingDemo2Application.class,
     TestContainersCassandraConfig.class
 },initializers = TestContainersCassandraConfig.Initializer.class)
-class CassandraCrudIT extends BaseIntegrationTest {
+class CassandraCrudIT extends IntegrationProfileActivation {
 
   private final Contact.EmailAddress emailAddress = new Contact.EmailAddress("toto@yopmail.com");
   @Autowired

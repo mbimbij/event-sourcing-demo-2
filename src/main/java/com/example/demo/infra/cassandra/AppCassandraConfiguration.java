@@ -1,6 +1,5 @@
 package com.example.demo.infra.cassandra;
 
-import com.example.demo.core.ContactRepository;
 import com.example.demo.core.EventStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
@@ -19,32 +18,32 @@ import java.util.List;
 @ConditionalOnProperty(name = "app.eventstore.implementation", havingValue = "cassandra")
 public class AppCassandraConfiguration extends AbstractCassandraConfiguration {
   @Autowired
-  CassandraProperties appCassandraConfiguration;
+  CassandraProperties cassandraProperties;
 
   @Override
   protected String getContactPoints() {
-    return String.join(",", appCassandraConfiguration.getContactPoints());
+    return String.join(",", cassandraProperties.getContactPoints());
   }
 
   @Override
   protected String getKeyspaceName() {
-    return appCassandraConfiguration.getKeyspaceName();
+    return cassandraProperties.getKeyspaceName();
   }
 
   @Override
   public SchemaAction getSchemaAction() {
-    return SchemaAction.valueOf(appCassandraConfiguration.getSchemaAction());
+    return SchemaAction.valueOf(cassandraProperties.getSchemaAction());
   }
 
   @Override
   protected String getLocalDataCenter() {
-    return appCassandraConfiguration.getLocalDatacenter();
+    return cassandraProperties.getLocalDatacenter();
   }
 
   @Override
   protected List<CreateKeyspaceSpecification> getKeyspaceCreations() {
     return Collections.singletonList(CreateKeyspaceSpecification
-        .createKeyspace(appCassandraConfiguration.getKeyspaceName())
+        .createKeyspace(cassandraProperties.getKeyspaceName())
         .ifNotExists(true)
         .with(KeyspaceOption.DURABLE_WRITES, true)
         .withSimpleReplication());

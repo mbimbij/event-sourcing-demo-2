@@ -99,7 +99,7 @@ public class Contact {
     }
   }
 
-  public static enum State {
+  public enum State {
     NOT_CREATED, CREATED, DELETED
   }
 }
