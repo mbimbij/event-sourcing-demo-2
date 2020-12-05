@@ -1,4 +1,4 @@
-package com.example.demo.infra.toto;
+package com.example.demo.infra.cassandra;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.test.util.TestPropertyValues;

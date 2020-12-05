@@ -1,4 +1,4 @@
-package com.example.demo.infra.toto;
+package com.example.demo.infra.cassandra;
 
 import com.example.demo.*;
 import com.example.demo.core.*;
@@ -6,18 +6,13 @@ import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.IfProfileValue;
-import org.springframework.test.annotation.ProfileValueSourceConfiguration;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
 
 import java.util.Optional;
 import java.util.UUID;
 
 import static com.example.demo.core.Contact.State.CREATED;
 import static com.example.demo.core.Contact.State.DELETED;
-import static com.example.demo.infra.toto.TestContainersCassandraConfig.ACTIVE_PROFILE;
 import static java.time.ZonedDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
 
