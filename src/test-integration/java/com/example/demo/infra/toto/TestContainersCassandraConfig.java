@@ -21,8 +21,7 @@ public class TestContainersCassandraConfig {
     public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
       List<String> activeProfiles = Arrays.asList(configurableApplicationContext.getEnvironment().getActiveProfiles());
       log.info("coucou {}", activeProfiles.toString());
-      boolean testContainersProfileActivated = activeProfiles.contains(ACTIVE_PROFILE);
-      if (testContainersProfileActivated) {
+      if (testContainersProfileActivated(activeProfiles)) {
         CassandraContainer cassandra = new CassandraContainer("cassandra:3");
         cassandra.start();
         int cassandraPort = cassandra.getMappedPort(9042);
@@ -32,6 +31,10 @@ public class TestContainersCassandraConfig {
             String.format("spring.data.cassandra.port=%d", cassandraPort)
         ).applyTo(configurableApplicationContext.getEnvironment());
       }
+    }
+
+    private boolean testContainersProfileActivated(List<String> activeProfiles) {
+      return activeProfiles.contains(ACTIVE_PROFILE);
     }
   }
 }
